@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>jQuery</title>
+	<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+	<style>
+		#box{width:1000px; border:1px solid black; margin-top:10px;}
+	</style>
+</head>
+<body>
+	<input id="content" type="text" size=136>
+	<button id="btnInsert">입력</button>
+	<div id="box"></div>
+</body>
+
+<script>
+	$("#btnInsert").on("click", function(){
+		var content=$("#content").val();
+		if(!content){
+			alert("값을 입력하세용");
+		}else{
+			$("#box").append("<h3>" + content + "</h3>");
+		}
+		$("#content").val("");
+		$("#content").focus();
+	});
+</script>
+
+</html>

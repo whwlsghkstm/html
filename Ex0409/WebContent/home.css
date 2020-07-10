@@ -1,0 +1,13 @@
+@charset "UTF-8";
+
+	body{background:gray;}
+	#page{background:#363636; color:white; width:1000px; margin:auto; box-shadow:10px 10px 10px #ffffa1;
+		padding:30px; border-radius:10px 10px 10px 10px;}
+	#header h1{color:white; text-align:center; font-size:50px;}
+	#footer h3{color:white; text-align:right; font-style:italic;}
+	.box{border:2px solid white; padding:10px; margin-bottom:10px; width:850px;}
+	.title{line-height:10px;}
+	.item{color:white;}
+	#menu{width:100px; float:right; color:white;}
+	a{color:#c0c0c0; line-height:40px; font-size:25px;}
+	a:hover{background:#a6a6a6;}

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>상품검색</title>
+	<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.1/handlebars.js"></script>
+	<style>
+		#tab{width:800px; border-collapse:collapse;}
+		td{border:1px solid black; padding:3px;}
+		.productId{width:100px;}
+		.title{width:500px; text-overflow:ellipsis; white-space:nowrap; overflow:hidden;}
+		.lprice{width:100px; text-align:center;}
+		.hprice{width:100px; text-align:center;}
+		.row:hover{background:pink;}
+		#search{width:800px; padding:10px; background:gray; color:white; margin-bottom:10px;}
+		.header{text-align:center; background:blue; color:yellow;}
+		.save .delete{text-align:center; width:50px}
+		img{width:100px; height:100px;}
+	</style>
+</head>
+<body>
+	<h1>[상품검색]</h1>
+	<div id="search">
+		검색수 : <span id="total"></span><br>
+		<input type="text" id="textSearch" value="불족발">
+		<input type="button" id="btnSearch" value="검색">
+		<br>
+		<button id="btnPre">이전</button>
+		<span id="page"></span>
+		<button id="btnNext">다음</button>
+		<br>
+	</div>
+	<br>
+	
+	<input type="button" id="btnSave" value="선택저장">
+	<table id="tab"></table>
+	<script id="temp" type="text/x-handlebars-template">
+		<tr class="header">
+			<td><input type="checkbox" id="checkAll"></td>
+			<td>상품코드</td>
+			<td>상품명</td>
+			<td>최저가</td>
+			<td>최고가</td>
+			<td>상품 이미지</td>
+		</tr>
+
+		{{#each items}}
+		<tr class="row">
+			<td><input type="checkbox" class="check"></td>
+			<td><div class="productId">{{{productId}}}</div></td>
+			<td><div class="title">{{{title}}}</div></td>
+			<td><div class="lprice">{{{lprice}}}</div></td>
+			<td><div class="hprice">{{{hprice}}}</div></td>
+			<td><img src={{{image}}} url={{{image}}}></td>
+		</tr>
+		{{/each}}
+	</script>
+	
+	<h1>[상품목록]</h1>
+	<div>
+		저장된 상품갯수 : <span id="count"></span>
+	</div>
+	<input type="button" id="btnDelete" value="선택삭제">
+	<table id="tab1"></table>
+	<script id="temp1" type="text/x-handlebars-template">
+		<tr class="header">
+			<td><input type="checkbox" id="checkAll1"></td>
+			<td>상품명</td>
+			<td>최저가</td>
+			<td>최고가</td>
+			<td>상품 이미지</td>
+			<td>수정</td>
+		</tr>
+
+		{{#each items}}
+		<tr class="row" sid={{sid}}>
+			<td><input type="checkbox" class="check"></td>
+			<td><div class="title">{{{title}}}</div></td>
+			<td><input type="text" class="lprice" value={{{lprice}}}></td>
+			<td><input type="text" class="hprice" value={{{hprice}}}></td>
+			<td><img src={{{image}}} url={{{image}}}></td>
+			<td><button>수정</button></td>
+		</tr>
+		{{/each}}
+	</script>
+</body>
+
+<script>
+	var display=5;
+	var start=1;
+	var total;
+	var page=1;
+	getList();
+	getShop();
+	
+	//검색버튼클릭
+	$("#btnSearch").on("click", function(){
+		getList();
+		start=1;
+		page=1;
+	});
+	
+	//검색창에서엔터
+	$("#textSearch").keydown(function(key){
+		if(key.keyCode==13){
+			getList();
+			start=1;
+			page=1;
+		}
+	});
+	
+	//다음버튼
+	$("#btnNext").on("click", function(){
+		if(start+display < total){
+			start+=display;
+			page++;
+			getList();
+		}
+		else{
+			alert("끝이지롱");
+		}
+	});
+	
+	//이전버튼
+	$("#btnPre").on("click", function(){
+		if(start>1){
+			start-=display;
+			page--;
+			getList();
+		}
+		else{
+			alert("처음이지롱");
+		}
+	});
+	
+	//체크박스모두표시
+	$("#tab").on("click", "#checkAll", function(){
+		if($(this).is(":checked")){
+			$("#tab .row .check").each(function(){
+				$(this).prop("checked", true);
+			});
+		}
+		else{
+			$("#tab .row .check").each(function(){
+				$(this).prop("checked", false);
+			});
+		}
+	});
+
+	//체크박스모두표시
+	$("#tab1").on("click", "#checkAll1", function(){
+		if($(this).is(":checked")){
+			$("#tab1 .row .check").each(function(){
+				$(this).prop("checked", true);
+			});
+		}
+		else{
+			$("#tab1 .row .check").each(function(){
+				$(this).prop("checked", false);
+			});
+		}
+	});
+	
+	//선택저장버튼클릭
+	$("#btnSave").on("click", function(){
+		if(!confirm("선택한 상품을 저장하시겠습니까?")) return;
+		$("#tab .row .check:checked").each(function(){
+			var row=$(this).parent().parent();
+			var id=row.find(".productId").text();
+			var title=row.find(".title").text();
+			var lprice=row.find(".lprice").text();
+			var hprice=row.find(".hprice").text();
+			var img=row.find("img").attr("src");
+			$(this).prop("checked", false);
+			
+			$.ajax({
+				type:"post",
+				url:"insert.jsp",
+				data:{"sid":id, "title":title, "lprice":lprice, "hprice":hprice, "image":img},
+				success:function(){}
+			});
+		});
+		alert("저장이 완료 되었습니다.");
+		getShop();
+		
+		$("#tab #checkAll").prop("checked", false);
+	});
+	
+	//선택삭제버튼클릭
+	$("#btnDelete").on("click", function(){
+		if(!confirm("선택한 상품을 삭제하시겠습니까?")) return;
+		$("#tab1 .row .check:checked").each(function(){
+			var row=$(this).parent().parent();
+			var id=row.attr("sid");
+			$(this).prop("checked", false);
+			
+			$.ajax({
+				type:"post",
+				url:"delete.jsp",
+				data:{"sid":id},
+				success:function(){}
+			});
+		});
+		alert("삭제가 완료 되었습니다.");
+		getShop();
+		
+		$("#tab1 #checkAll").prop("checked", false);
+	});
+	
+	//수정버튼클릭
+	$("#tab1").on("click", ".row button", function(){
+		if(!confirm("수정하시겠습니까?")) return;
+		var row=$(this).parent().parent();
+		var id=row.attr("sid");
+		var lprice=row.find(".lprice").val();
+		var hprice=row.find(".hprice").val();
+		
+		$.ajax({
+			type:"post",
+			url:"update.jsp",
+			data:{"sid":id, "lprice":lprice, "hprice":hprice},
+			success:function(){}
+		});
+		alert("수정 되었습니다.");
+		getShop();
+	});
+	
+	//저장된목록출력
+	function getShop(){
+		$.ajax({
+			type:"get",
+			url:"list.jsp",
+			dataType:"json",
+			success:function(data){
+				$("#count").html(data.total);
+				var temp=Handlebars.compile($("#temp1").html());
+				$("#tab1").html(temp(data));
+			}
+		});
+	}
+	
+	//검색결과출력
+	function getList(){
+		var query=$("#textSearch").val();
+		$("#textSearch").focus();
+		
+		$.ajax({
+			type:"get",
+			url:"shop.jsp",
+			data:{"query":query, "display":display, "start":start},
+			dataType:"json",
+			success:function(data){
+				total=data.total;
+				$("#total").html(total);
+				$("#page").html(page + " : page")
+
+				var temp=Handlebars.compile($("#temp").html());
+				$("#tab").html(temp(data));
+			}
+		});
+	}
+</script>
+
+</html>

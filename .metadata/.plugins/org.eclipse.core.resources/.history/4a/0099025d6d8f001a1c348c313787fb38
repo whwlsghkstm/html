@@ -1,0 +1,67 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>강좌목록</title>
+	<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.1/handlebars.js"></script>
+</head>
+<body>
+	<h1>[강좌목록]</h1>
+	<table id="tab" border=1></table>
+	<script id="temp" type="text/x-handlebars-template">
+			<tr class="title">
+				<td><input type="checkbox" id="checkAll1"></td>
+				<td>강좌번호</td>
+				<td>강좌이름</td>
+				<td>담당교수</td>
+			</tr>
+
+		{{#each clist}}
+			<tr class="row">
+				<td><input type="checkbox" class="check1"></td>
+				<td class="lcode">{{lcode}}</td>
+				<td class="lname">{{lname}}</td>
+				<td class="pname">{{pname}}</td>
+			</tr>
+		{{/each}}
+	</script>
+	
+	<h1>[수강신청목록]</h1>
+	<table id="tab1" border=1></table>
+	<script id="temp1" type="text/x-handlebars-template">
+			<tr class="title1">
+				<td><input type="checkbox" id="checkAll1"></td>
+				<td>학생번호</td>
+				<td>학생이름</td>
+				<td>점수</td>
+			</tr>
+
+		{{#each slist}}
+			<tr class="row1">
+				<td><input type="checkbox" class="check1"></td>
+				<td class="scode">{{scode}}</td>
+				<td class="sname">{{sname}}</td>
+				<td class="grade">{{grade}}</td>
+			</tr>
+		{{/each}}
+	</script>
+</body>
+
+<script>
+	$.ajax({
+		type:"get",
+		url:"json.jsp",
+		dataType:"json",
+		success:function(data){
+			var temp=Handlebars.compile($("#temp").html());
+			$("#tab").html(temp(data));
+		}
+	});
+	
+	$("#tab").on
+</script>
+
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>연습3</title>
+</head>
+<body>
+	<div>
+		<h1>[학생등록]</h1>
+		<form action="insert.jsp" method="post">
+			<table border=1 width=500>
+				<tr>
+					<td>학생번호 : </td>
+					<td><input type="text" name="snum"></td>
+				</tr>
+				
+				<tr>
+					<td>학생이름 : </td>
+					<td><input type="text" name="sname"></td>
+				</tr>
+				
+				<tr>
+					<td>학생연락처 : </td>
+					<td><input type="text" name="stel"></td>
+				</tr>
+				
+				<tr>
+					<td>학생주소: </td>
+					<td><input type="text" name="saddr" size=50></td>
+				</tr>
+				
+				<tr>
+					<td colspan=2 style="text-align:right">
+						<input type="submit" value="저장">
+						<input type="reset" value="취소">
+					</td>
+				</tr>
+			</table>
+		</form><br>
+	<a href="list.jsp">학생목록</a>
+	</div>
+</body>
+</html>

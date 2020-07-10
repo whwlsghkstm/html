@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>밤새 모니터에 튀긴 침이 마르기도 전에</title>
+	<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.1/handlebars.js"></script>
+</head>
+<body>
+	<h1>[학생입력]</h1>
+	<div>
+		학과 : <select id="dept">
+			<option>전산</option>
+			<option>전자</option>
+			<option>건축</option>
+			<option>실용음악</option>
+		</select>
+		학번 : <input type="text" id="scode" maxlength=8>
+		이름 : <input type="text" id="sname">
+		<button id="btnSearch">검색</button>
+	</div>
+	
+	<h1>[학생목록]</h1>
+	<table id="tab" border=1></table>
+	<script id="temp" type="text/x-handlebars-template">
+			<tr class="title">
+				<td><input type="checkbox" id="checkAll"></td>
+				<td>학생번호</td>
+				<td>학생이름</td>
+				<td>소속학과</td>
+			</tr>
+
+		{{#each sArray}}
+			<tr class="row">
+				<td><input type="checkbox" class="check"></td>
+				<td class="scode">{{scode}}</td>
+				<td class="sname">{{sname}}</td>
+				<td class="dept">{{dept}}</td>
+			</tr>
+		{{/each}}
+	</script>
+	<span id="total"></span>
+</body>
+
+<script>
+	$("#btnSearch").on("click", function(){
+		var dept=$("#dept").val();
+		$.ajax({
+			type:"get",
+			url:"sinsert.jsp",
+			data:{"dept":dept},
+			dataType:"json",
+			success:function(data){
+				$("#total").html(dept+"학과 학생인원수 : "+data.cnt);
+				var temp=Handlebars.compile($("#temp").html());
+				$("#tab").html(temp(data));
+			}
+		});
+	});
+</script>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>연습1</title>
+	<style>
+		/* 전체선택자 */
+		*{color:blue}
+		
+		/* 태그선택자 */		
+		h1{color:red}
+		p{color:yellow; background:pink}
+		
+		/* id선택자 */
+		#header{width:800px; height:50px; background:black; color:yellow; margin:20px;}
+		#wrap{width:1000px; height:500px; background:pink; color:blue; margin:auto;}
+		#aside{width:200px; height:300px; background:yellow; float:left; margin:20px;}
+		#content{width:600px; height:300px; background:green; float:left; margin:20px;}
+		
+		/* class선택자 */
+		.f{font-size:30px; }
+		
+		/* 후손선택자 */
+		#wrap h1{color:gray;}
+		
+		/* 자손선택자 */
+		#content > h1{color:purple;}
+		
+		/* 속성선택자 */
+		input[type="text"]{background:red;}
+		input[type="password"]{background:blue;}
+		
+		/* 반응선택자 */
+		h1:hover {background:black; color:white;}
+		h1:active {background:white; color:black;}
+		
+		/* 구조선택자 */
+		li:nth-child(2n){background:black; color:white;}
+		li:nth-child(2n+1){background:white; color:black;}
+		li:first-child{background:red;}
+		
+	</style>
+</head>
+<body>
+	<h1>전체 선택자 적용하기</h1>
+	<p>전체 선택자를 사용해 모든 태그의 color스타일 속성을 red로 변경합니다.</p>
+	
+	<div id="header"><h1>* 제목표시줄 *</h1></div>
+	<div id="wrap">
+		<div id="aside">
+			<h1>* aside *</h1>
+		</div>
+		
+		<div id="content">
+			<h1>* content *</h1>
+			<ol>
+				<li class="f">바나나</li>
+				<li class="f">사과</li>
+				<li class="f">파인애플</li>
+				<li class="f">수박</li>
+				<li>고구마</li>
+			</ol>
+			<input type="text">
+			<input type="password">
+		</div>
+	</div>
+</body>
+</html>

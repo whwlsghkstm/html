@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>[상품등록]</title>
+</head>
+<body>
+	<h1>[상품등록]</h1>
+	<form action="insert.jsp" method="post">
+		<table border=1 width=500>
+			<tr>
+				<td width=100>상품번호 : </td>
+				<td><input type="text" name="gnum"></td>
+			</tr>
+			
+			<tr>
+				<td width=100>상품이름 : </td>
+				<td><input type="text" name="gname"></td>
+			</tr>
+			
+			<tr>
+				<td width=100>상품가격 : </td>
+				<td><input type="text" name="gprice"></td>
+			</tr>
+			
+			<tr>
+				<td colspan=2 style=text-align:right>
+					<input type="submit" value="저장">
+					<input type="reset" value="취소">
+				</td>
+			</tr>
+			
+		</table>
+	</form>
+	
+	<br>
+	<a href="list.jsp">상품목록 보기</a>
+
+</body>
+</html>

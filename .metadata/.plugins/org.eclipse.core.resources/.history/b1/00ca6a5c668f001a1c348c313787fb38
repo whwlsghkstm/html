@@ -1,0 +1,30 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>강좌목록</title>
+</head>
+<body>
+	<h1>[강좌목록]</h1>
+	<table id="tab" border=1></table>
+	<script id="temp" type="text/x-handlebars-template">
+			<tr class="title">
+				<td><input type="checkbox" id="checkAll1"></td>
+				<td>강좌번호</td>
+				<td>강좌이름</td>
+				<td>담당교수</td>
+			</tr>
+
+		{{#each clist}}
+			<tr class="row">
+				<td><input type="checkbox" class="check1"></td>
+				<td class="lcode">{{lcode}}</td>
+				<td class="lname">{{lname}}</td>
+				<td class="pname">{{pname}}</td>
+			</tr>
+		{{/each}}
+	</script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+package ex01;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+
+public class SDAO {
+	//데이터베이스 연결 method
+	public Connection con() throws Exception{
+		String driver = "oracle.jdbc.driver.OracleDriver";
+		String url = "jdbc:oracle:thin:@localhost:1521:xe";
+		String user = "haksa";
+		String password = "pass";
+		  
+		Class.forName(driver);
+		Connection con=DriverManager.getConnection(url, user, password);
+		  
+		return con;
+	}
+}

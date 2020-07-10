@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>교수입력</title>
+</head>
+<body>
+	<h1>[교수입력]</h1>
+	<div>
+		교수번호 : <input type="text" id="textpcode"><br>
+		교수이름 : <input type="text" id="textpname"><br>
+		소속학과 : <input type="text" id="textdept"><br>
+		임용일 : <input type="text" id="texthiredate"><br>
+		직급 : <input type="text" id="texttitle"><br>
+		급여 : <input type="text" id="textsalary"><br>
+		<input type="button" id="btnInsert" value="저장">
+	</div>
+</body>
+</html>

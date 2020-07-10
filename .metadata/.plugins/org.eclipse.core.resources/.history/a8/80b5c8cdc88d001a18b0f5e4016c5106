@@ -1,0 +1,62 @@
+package ex01;
+
+public class EnrollmentVO {
+	private String lcode;
+	private String lname;
+	private String pname;
+	private double avg;
+	private String scode;
+	private String sname;
+	private String dept;
+	
+	
+	public String getScode() {
+		return scode;
+	}
+	public void setScode(String scode) {
+		this.scode = scode;
+	}
+	public String getSname() {
+		return sname;
+	}
+	public void setSname(String sname) {
+		this.sname = sname;
+	}
+	public String getDept() {
+		return dept;
+	}
+	public void setDept(String dept) {
+		this.dept = dept;
+	}
+	
+	
+	@Override
+	public String toString() {
+		return "EnrollmentVO [lcode=" + lcode + ", lname=" + lname + ", pname=" + pname + ", avg=" + avg + "]";
+	}
+	public String getLcode() {
+		return lcode;
+	}
+	public void setLcode(String lcode) {
+		this.lcode = lcode;
+	}
+	public String getLname() {
+		return lname;
+	}
+	public void setLname(String lname) {
+		this.lname = lname;
+	}
+	public String getPname() {
+		return pname;
+	}
+	public void setPname(String pname) {
+		this.pname = pname;
+	}
+	public double getAvg() {
+		return avg;
+	}
+	public void setAvg(double avg) {
+		this.avg = avg;
+	}
+	
+}

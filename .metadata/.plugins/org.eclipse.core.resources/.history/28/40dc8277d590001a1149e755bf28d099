@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>밤새 모니터에 튀긴 침이 마르기도 전에</title>
+	<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.1/handlebars.js"></script>
+</head>
+<body>
+	<h1>[학생입력]</h1>
+	<div>
+		학과 : <select id="dept">
+			<option>전산</option>
+			<option>전자</option>
+			<option>건축</option>
+			<option>실용음악</option>
+		</select>
+		학번 : <input type="text" id="textscode" maxlength=8>
+		이름 : <input type="text" id="textsname">
+		<button id="btnSearch">검색</button>
+	</div>
+	
+	<h1>[학생목록]</h1>
+	<input type="button" id="btnDelete" value="선택삭제">
+	<table id="tab" border=1></table>
+	<script id="temp" type="text/x-handlebars-template">
+			<tr class="title">
+				<td><input type="checkbox" id="checkAll"></td>
+				<td>학생번호</td>
+				<td>학생이름</td>
+				<td>소속학과</td>
+				<td>삭제</td>
+			</tr>
+
+		{{#each sArray}}
+			<tr class="row">
+				<td><input type="checkbox" class="check"></td>
+				<td class="scode">{{scode}}</td>
+				<td class="sname">{{sname}}</td>
+				<td class="dept">{{dept}}</td>
+				<td><button class="btnDelete">삭제</button></td>
+			</tr>
+		{{/each}}
+	</script>
+	<span id="total"></span>
+</body>
+
+<script>
+	var scode;
+	var sname;
+	var dept;
+	getList();
+
+	//목록출력
+	function getList(){
+		$.ajax({
+		    type:"get",
+		    url:"slist.jsp",
+		    dataType:"json",
+		    success:function(data){
+		       var temp=Handlebars.compile($("#temp").html());
+		       $("#tab").html(temp(data));
+		    }
+		});
+	}
+	
+	//학생데이터 입력
+	$("#btnSearch").on("click", function(){
+		if(!confirm("저장하시겠습니까?")) return;
+		scode=$("#textscode").val();
+		sname=$("#textsname").val();
+		dept=$("#dept").val();
+		$.ajax({
+			type:"get",
+			url:"sinsert.jsp",
+			data:{"scode":scode, "sname":sname, "dept":dept},
+			dataType:"json",
+			success:function(data){
+				if(data.cnt==1){
+					alert("있는학번이지롱");
+				}
+				else{
+					alert("저장됐지롱");
+				}
+				getList();
+			}
+		});
+	});
+	
+	//학생데이터 삭제
+	$("#tab").on("click", ".row button", function(){
+		if(!confirm("삭제 ㄱ?")) return;
+		var row=$(this).parent().parent();
+		scode=row.find(".scode").html();
+		$.ajax({
+			type:"get",
+			url:"sdelete.jsp",
+			data:{"scode":scode},
+			dateType:"json",
+			success:function(data){
+				if(data.cnt==null){
+					alert("삭제됐지롱");
+					getList();
+				}
+				else{
+					alert("삭제안됐지롱~~~!!");
+				}
+			}
+		});
+	});
+	
+	//선택한 학생데이터 삭제
+	$("#btnDelete").on("click", function(){
+		if(!confirm("선택한거 삭제 ㄱ?")) return;
+		$("#tab .row .check:checked").each(function(){
+			var row=$(this).parent().parent();
+			scode=row.find(".scode").html();
+			$(this).prop("checked", false);
+			$("#tab #checkAll").prop("checked", false);
+			
+			$.ajax({
+				type:"get",
+				url:"sdelete.jsp",
+				data:{"scode":scode},
+				success:function(data){}
+			});
+		})
+		alert("수정이 완료되었습니다.");
+		getList();
+
+	});
+	
+	//체크박스모두표시
+	$("#tab").on("click", "#checkAll", function(){
+		if($(this).is(":checked")){
+			$("#tab .row .check").each(function(){
+				$(this).prop("checked", true);
+			});
+		}
+		else{
+			$("#tab .row .check").each(function(){
+				$(this).prop("checked", false);
+			});
+		}
+	});
+	
+</script>
+</html>

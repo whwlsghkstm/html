@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>교수입력</title>
+	<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.1/handlebars.js"></script>
+</head>
+<body>
+	<h1>[교수입력]</h1>
+	<div>
+		교수번호 : <input type="text" id="textpcode"><br>
+		교수이름 : <input type="text" id="textpname"><br>
+		소속학과 : <input type="text" id="textdept"><br>
+		임용일 : <input type="text" id="texthiredate"><br>
+		직급 : <input type="text" id="texttitle"><br>
+		급여 : <input type="text" id="textsalary"><br>
+		<input type="button" id="btnInsert" value="저장">
+	</div>
+</body>
+
+<script>
+	$("#btnInsert").on("click", function(){
+		if(!confirm("저장하시겠습니까?")) return;
+		var pcode=$("#textpcode").val();
+		var pname=$("#textpname").val();
+		var dept=$("#textdept").val();
+		var hiredate=$("#texthiredate").val();
+		var title=$("#texttitle").val();
+		var salary=$("#textsalary").val();
+		if(pcode.length==0 || pcode.length !=3){
+			alert("교수번호를 3자리로 입력해주세요.");
+		}
+		else if(pname.length==0){
+			alert("교수이름을 입력하세요.");
+		}
+		else if(dept.length==0){
+			alert("소속학과를 입력하세요.");
+		}
+		else if(hiredate.length==0){
+			alert("임용일을 입력하세요.");
+		}
+		else if(title.length==0){
+			alert("직급을 입력하세요.");
+		}
+		else if(salary.length==0){
+			alert("급여를 입력하세요.");
+		}
+		else{
+			alert("저장됐지롱");
+		}
+	});
+</script>
+
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>카카오 웹검색</title>
+	<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+</head>
+<body>
+	<h1>[카카오 웹검색]</h1>
+	<div id="search">
+		<input type="text" id="textSearch">
+		<input type="button" value="검색" id="btnSearch">
+	</div>
+	<table id="tab" width=700 border=1></table>
+</body>
+
+<script>
+	var query=$("#textSearch").val();
+	getList();
+	
+	$("#btnSearch").on("click", function(){
+		query=$("#textSearch").val();
+		getList();
+	});
+	function getList(){
+		$.ajax({
+			type:"get",
+			url:"https://dapi.kakao.com/v2/search/web",
+			headers:{"Authorization": "KakaoAK b6ff0d7dd06783aa72d7566550b3b8f3"},
+			dataType:"json",
+			data:{"query":query, "page":1, "size":10},
+			success:function(data){
+				var str="";
+				$(data.documents).each(function(){
+					var title=this.title;
+					var contents=this.contents;
+					var url=this.url;
+					str += "<tr>";
+					str += "<td><a href=" + url + ">" + title + "</a></td>";
+					str += "</tr>";
+					str += "<tr>";
+					str += "<td>" + contents + "</td>";
+					str += "</tr>";
+				});
+				$("#tab").html(str);
+			}
+		});
+	}
+</script>
+
+</html>

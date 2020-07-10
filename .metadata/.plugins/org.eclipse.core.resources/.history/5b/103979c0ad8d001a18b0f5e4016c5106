@@ -1,0 +1,8 @@
+package ex01;
+
+public class EnrollmentVO {
+	private String lcode;
+	private String lname;
+	private String pname;
+	private double grade;
+}

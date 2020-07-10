@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>다섯살때부터 나는 피아노를 쳤어</title>
+	<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.1/handlebars.js"></script>
+</head>
+<body>
+	<h1>[영재였지]</h1>
+	<select id="dept">
+		<option>전산</option>
+		<option>전자</option>
+		<option>건축</option>
+		<option>실용음악</option>
+	</select>
+	<input type="button" value="검색" id="btnSearch">
+	
+	<h1>[교수목록]</h1>
+	<table id="tab" border=1></table>
+	<script id="temp" type="text/x-handlebars-template">
+			<tr class="title">
+				<td><input type="checkbox" id="checkAll"></td>
+				<td>교수번호</td>
+				<td>교수이름</td>
+				<td>소속학과</td>
+				<td>임용일</td>
+				<td>직급</td>
+				<td>급여</td>
+			</tr>
+
+		{{#each pArray}}
+			<tr class="row">
+				<td><input type="checkbox" class="check"></td>
+				<td class="pcode">{{pcode}}</td>
+				<td class="pname">{{pname}}</td>
+				<td class="dept">{{dept}}</td>
+				<td class="hiredate">{{hiredate}}</td>
+				<td class="title">{{title}}</td>
+				<td class="salary">{{salary}}</td>
+			</tr>
+		{{/each}}
+	</script>
+</body>
+
+<script>
+	$("#btnSearch").on("click", function(){
+		var dept=$("#dept").html();
+		alert(dept);
+		$.ajax({
+			type:"get",
+			url:"list.jsp",
+			data:{"dept":dept},
+			dataType:"json",
+			success:function(data){
+				var temp=Handlebars.compile($("#temp").html());
+				$("#tab").html(temp(data));
+			}
+		});
+	});
+</script>
+
+</html>

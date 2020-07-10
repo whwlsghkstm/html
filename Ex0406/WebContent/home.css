@@ -1,0 +1,13 @@
+@charset "UTF-8";
+
+	h1{color:white;
+		background:black;
+		text-align:center;}
+	
+	h2{color:skyblue;
+		background:#FF9BFF;
+		text-align:right;}
+	
+	body{background:pink;}
+	
+	h3{background:blue;}

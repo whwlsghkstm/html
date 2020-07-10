@@ -1,0 +1,87 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>강좌 목록출력</title>
+	<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.1/handlebars.js"></script>
+</head>
+<body>
+	<h1>[강좌목록]</h1>
+
+	<table id="tab" border=1></table>
+	<script id="temp" type="text/x-handlebars-template">
+			<tr class="title">
+				<td><input type="checkbox" id="checkAll"></td>
+				<td>강좌번호</td>
+				<td>강좌이름</td>
+				<td>담당교수</td>
+				<td>평균점수</td>
+			</tr>
+
+		{{#each clist}}
+			<tr class="row">
+				<td><input type="checkbox" class="check"></td>
+				<td class="lcode">{{lcode}}</td>
+				<td class="lname">{{lname}}</td>
+				<td class="pname">{{pname}}</td>
+				<td class="avg">{{avg}}</td>
+			</tr>
+		{{/each}}
+	</script>
+	
+	<h1>[학생평균]</h1>
+	<table id="tab1" border=1></table>
+	<script id="temp1" type="text/x-handlebars-template">
+			<tr class="title1">
+				<td><input type="checkbox" id="checkAll"></td>
+				<td>학생번호</td>
+				<td>학생이름</td>
+				<td>소속학과</td>
+				<td>평균점수</td>
+			</tr>
+
+		{{#each slist}}
+			<tr class="row1">
+				<td><input type="checkbox" class="check"></td>
+				<td class="scode">{{scode}}</td>
+				<td class="sname">{{sname}}</td>
+				<td class="dept">{{dept}}</td>
+				<td class="avg1">{{avg1}}</td>
+			</tr>
+		{{/each}}
+	</script>
+</body>
+
+<script>
+	getList();
+	function getList(){
+		$.ajax({
+			type:"get",
+			url:"json.jsp",
+			dataType:"json",
+			success:function(data){
+				alert("1");
+				var temp=Handlebars.compile($("#temp").html());
+				$("#tab").html(temp(data));
+			}
+		});
+	}
+	
+	//체크박스모두표시
+	$("#tab").on("click", "#checkAll", function(){
+		if($(this).is(":checked")){
+			$("#tab .row .check").each(function(){
+				$(this).prop("checked", true);
+			});
+		}
+		else{
+			$("#tab .row .check").each(function(){
+				$(this).prop("checked", false);
+			});
+		}
+	});
+</script>
+</html>

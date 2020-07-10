@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>블로그 검색</title>
+	<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.1/handlebars.js"></script>
+	<style>
+		#tab{border-collapse:collapse;}
+		.title{border:1px solid black;}
+		.title:hover{background:blue;}
+	</style>
+</head>
+<body>
+	<h1>[블로그검색]</h1>
+	<div id="search">
+		검색수 : <span id="total"></span><br>
+		<input type="text" id="textSearch" value="불족발">
+		<input type="button" id="btnSearch" value="검색">
+	</div>
+		<button id="btnPre">이전</button>
+		<span id="page"></span>
+		<button id="btnNext">다음</button>
+		<br><hr>
+	
+	<table id="tab"></table>
+	<script id="temp" type="text/x-handlevars-tamplate">
+		{{#each items}}
+			<tr>
+				<td class="title">{{title}}</td>
+			</tr>
+		{{/each}}
+
+	</script>
+</body>
+
+<script>
+	var display=10;
+	var start=1;
+	var page=1;
+	var total;
+
+	getList();
+	$("#btnSearch").on("click", function(){
+		getList();
+		start=1;
+		page=1;
+	});
+	
+	$("#textSearch").keydown(function(key){
+		if(key.keyCode==13){
+			getList();
+			start=1;
+			page=1;
+		}
+	});
+	
+	$("#btnNext").on("click", function(){
+		if(start+display < total){
+			start+=display;
+			page++;
+			getList();
+		}
+		else{
+			alert("끝이지롱");
+		}
+	});
+	
+	$("#btnPre").on("click", function(){
+		if(start>1){
+			start-=display;
+			page--;
+			getList();
+		}
+		else{
+			alert("처음이지롱");
+		}
+	});
+
+	function getList(){
+		var query=$("#textSearch").val();
+		$("#textSearch").focus();
+		
+		$.ajax({
+			type:"get",
+			url:"blog.jsp",
+			dataType:"json",
+			data:{"query":query, "display":display, "start":start},
+			success:function(data){
+				total=data.total;
+				$("#total").html(total);
+				$("#page").html(page + " : page")
+				var temp=Handlebars.compile($("#temp").html());
+				$("#tab").html(temp(data));
+			}
+		});
+	}
+</script>
+
+</html>

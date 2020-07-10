@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy element &apos;cjson.jsp&apos; to &apos;cjson.jsp&apos;&#x0D;&#x0A;- Original project: &apos;Ex0429&apos;&#x0D;&#x0A;- Destination element: &apos;cjson.jsp&apos;&#x0D;&#x0A;- Original element: &apos;cjson.jsp&apos;" description="Copy file" element1="WebContent/student/cjson.jsp" files="1" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1588144154466" target="/Ex0429/WebContent/student/cjson.jsp" units="0" version="1.0"/>
+</session>

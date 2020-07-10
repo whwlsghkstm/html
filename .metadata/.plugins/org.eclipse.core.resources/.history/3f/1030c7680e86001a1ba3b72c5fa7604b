@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>동영상 검색</title>
+	<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.1/handlebars.js"></script>
+	
+	<style>
+		img{cursor:pointer;}
+		#tab{width:1000px;}
+		.header td{border:1px solid black; text-align:center;}
+		.row td{border:1px solid black;}
+		.title{width:300px;}
+		.datetime{width:200px; text-align:center;}
+		.play_time{width:100px; text-align:center;}
+		
+		#darken-background {
+			position:absolute;
+			top:0px;
+			left:0px;
+			right:0px;
+			height:100%;
+			display:none;
+			background:rgba(0, 0, 0, 0.5);
+			z-index:10000;
+			overflow-y:scroll;
+		}
+		#lightbox {
+			width:700px;
+			margin:20px auto;
+			padding:15px;
+			border: 1px solid #333333;
+			border-radius:5px;
+			background:white;
+			box-shadow:0px 5px 5px rgba(34, 25, 25, 0.4);
+			text-align:center;
+		}
+		
+	</style>
+</head>
+<body>
+	<h1>[동영상검색]</h1>
+	<div id="search">
+		검색수 : <span id="total"></span>
+	</div>
+		<input type="text" id="textSearch" value="aoa">
+		<input type="button" value="검색" id="btnSearch"><br><br>
+		<button id="btnPre">이전</button>
+		<span id="page"></span>
+		<button id="btnNext">다음</button>
+		<br><hr>
+
+	<div id="darken-background">
+		<div id="lightbox">
+			<img id="image" src="http://placehold.it/500x500"/>
+			<div><button id="btnClose">닫기</button></div>
+		</div>
+	</div>
+	
+	<button id="btnSave">선택저장</button>
+	<table id="tab"></table>
+	<script id="temp" type="text/x-handlebars-template">
+			<tr class="header">
+				<td><input type="checkbox" id="checkAll"></td>
+				<td>썸네일</td>
+				<td>제목</td>
+				<td>동영상등록일</td>
+				<td>재생시간</td>
+			</tr>
+
+		{{#each documents}}
+			<tr class="row">
+				<td><input type="checkbox" class="check"></td>
+				<td class="thumbnail"><img src={{thumbnail}} url={{thumbnail}}</td>
+				<td class="title"><a href={{url}}>{{title}}</a></td>
+				<td class="datetime">{{datetime}}</td>
+				<td class="play_time">{{play_time}}</td>
+			</tr>
+		{{/each}}
+	</script>
+	
+	<h1>[저장된 동영상목록]</h1>
+	<div>
+		저장된 동영상갯수 : <span id="count"></span>
+	</div>
+	<input type="button" id="btnDelete" value="선택삭제">
+	<table id="tab1"></table>
+	<script id="temp1" type="text/x-handlebars-template">
+		<tr class="header">
+			<td><input type="checkbox" id="checkAll1"></td>
+			<td>썸네일</td>
+			<td>제목</td>
+			<td>수정</td>
+		</tr>
+
+		{{#each documents}}
+		<tr class="row" vnum={{vnum}}>
+			<td><input type="checkbox" class="check"></td>
+			<td class="thumbnail">{{{thumbnail}}}</td>
+
+			<td><input type="text" value="{{{title}}}" size=50 class="title"></td>
+			<td><button class="btnUpdate">수정</button></td>
+		</tr>
+		{{/each}}
+	</script>
+</body>
+
+<script>
+	var page=1;
+	var is_end=1;
+	getList();
+	getVideo();
+	
+	//검색버튼클릭
+	$("#btnSearch").on("click", function(){
+		getList();
+		page=1;
+	});
+	
+	//검색창에서엔터
+	$("#textSearch").keydown(function(key){
+		if(key.keyCode==13){
+			getList();
+			start=1;
+			page=1;
+		}
+	});
+	
+	//이전버튼클릭
+	$("#btnPre").on("click", function(){
+		if(page>1){
+			page--;
+			getList();
+		}
+		else{
+			alert("처음이지롱");
+		}
+	});
+	
+	//다음버튼클릭
+	$("#btnNext").on("click", function(){
+		if(is_end==false){
+			page++;
+			getList();
+		}
+		else{
+			alert("끝이지롱");
+		}
+	});
+
+
+	//체크박스모두표시
+	$("#tab").on("click","#checkAll", function(){
+		if($(this).is(":checked")){
+			$("#tab .row .check").each(function(){
+				$(this).prop("checked", true);
+			});
+		}
+		else{
+			$("#tab .row .check").each(function(){
+				$(this).prop("checked", false);
+			});
+		}
+	});
+	
+	//체크박스모두표시
+	$("#tab1").on("click", "#checkAll1", function(){
+		if($(this).is(":checked")){
+			$("#tab1 .row .check").each(function(){
+				$(this).prop("checked", true);
+			});
+		}
+		else{
+			$("#tab1 .row .check").each(function(){
+				$(this).prop("checked", false);
+			});
+		}
+	});
+	
+	//선택저장버튼클릭
+	$("#btnSave").on("click", function(){
+		if(!confirm("선택한 상품을 저장하시겠습니까?")) return;
+		$("#tab .row .check:checked").each(function(){
+			var row=$(this).parent().parent();
+			var thumbnail=row.find(".thumbnail").html();
+			var title=row.find(".title").text();
+			var datetime=row.find(".datetime").text();
+			var play_time=row.find(".play_time").text();
+			
+			$(this).prop("checked", false);
+			
+			$.ajax({
+				type:"post",
+				url:"insert.jsp",
+				data:{"thumbnail":thumbnail, "title":title, "datetime":datetime, "play_time":play_time},
+				success:function(){}
+			});
+		});
+		alert("저장이 완료 되었습니다.");
+		getVideo();
+		
+		$("#tab #checkAll").prop("checked", false);
+	});
+	
+
+	
+	//저장된목록출력
+	function getVideo(){
+		$.ajax({
+			type:"get",
+			url:"list.jsp",
+			dataType:"json",
+			success:function(data){
+				$("#count").html(data.total);
+				var temp=Handlebars.compile($("#temp1").html());
+				$("#tab1").html(temp(data));
+			}
+		});
+	}
+	//선택삭제버튼클릭
+	$("#btnDelete").on("click", function(){
+		if(!confirm("선택한 상품을 삭제하시겠습니까?")) return;
+		$("#tab1 .row .check:checked").each(function(){
+			var row=$(this).parent().parent();
+			var vnum=row.attr("vnum");
+			$(this).prop("checked", false);
+			
+			$.ajax({
+				type:"post",
+				url:"delete.jsp",
+				data:{"vnum":vnum},
+				headers:{"Authorization": "KakaoAK b6ff0d7dd06783aa72d7566550b3b8f3"},
+				dataType:"json",
+				success:function(){}
+			});
+		});
+		alert("삭제가 완료 되었습니다.");
+		getVideo();
+		
+		$("#tab1 #checkAll").prop("checked", false);
+	});
+	
+	//수정버튼클릭
+	$("#tab1").on("click", ".row button", function(){
+		if(!confirm("수정하시겠습니까?")) return;
+		var row=$(this).parent().parent();
+		var vnum=row.attr("vnum");
+		var title=row.find(".title").val();
+		
+		$.ajax({
+			type:"post",
+			url:"update.jsp",
+			data:{"vnum":vnum, "title":title},
+			success:function(){}
+		});
+		alert("수정 되었습니다.");
+		getVideo();
+	});
+	
+	//목록출력
+	function getList(){
+		var query=$("#textSearch").val();
+		$("#textSearch").focus();
+		$.ajax({
+			type:"get",
+			url:"https://dapi.kakao.com/v2/search/vclip?",
+			headers:{"Authorization": "KakaoAK b6ff0d7dd06783aa72d7566550b3b8f3"},
+			dataType:"json",
+			data:{"query":query, "page":page, "size":5},
+			success:function(data){
+				var total=data.meta.pageable_count;
+				var temp=Handlebars.compile($("#temp").html());
+				$("#total").html(total);
+				$("#tab").html(temp(data));
+				$("#page").html("현재페이지 : " + page);
+				is_end=data.meta.is_end;
+			}
+		});
+	}
+</script>
+
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>연습2</title>
+</head>
+<body>
+	<div>
+		<h1>폼(form)태그연습</h1>
+		<form>
+			<table border=1 width=500>
+			<tr>
+				<td width=200>아이디 : </td>
+				<td><input type="text"></td>
+			</tr>
+			
+			<tr>
+				<td width=200>비밀번호 : </td>
+				<td><input type="password"></td>
+			</tr>
+			
+			<tr>
+				<td width=200>사진등록 : </td>
+				<td><input type="file"></td>
+			</tr>
+			
+			<tr>
+				<td width=200>성별 :  </td>
+				<td>
+					<input type="radio" name="gender">남
+					<input type="radio" name="gender">여
+				</td>
+			</tr>
+			
+			<tr>
+				<td width=200>취미 :  </td>
+				<td>
+					<input type="checkbox" name="hobby1">영화보기
+					<input type="checkbox" name="hobby2">음악듣기
+					<input type="checkbox" name="hobby3">운동하기
+					<input type="checkbox" name="hobby4">노래하기
+					<input type="checkbox" name="hobby5">기타
+				</td>
+			</tr>
+			
+			<tr>
+				<td width=200>비고 :  </td>
+				<td>
+					<textarea rows="5" cols="50" name="remark"></textarea>
+				</td>
+			</tr>
+			
+			<tr>
+				<td colspan=2  style="text-align:right">
+					<input type="submit" value="저장">
+					<input type="reset" value="취소">
+					<input type="button" value="목록">
+				</td>
+			</tr>
+			</table>
+		</form>
+	</div>
+</body>
+</html>

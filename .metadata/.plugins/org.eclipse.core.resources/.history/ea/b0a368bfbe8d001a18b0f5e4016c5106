@@ -1,0 +1,52 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>강좌 목록출력</title>
+	<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.1/handlebars.js"></script>
+</head>
+<body>
+	<h1>[강좌목록]</h1>
+
+	<table id="tab" border=1></table>
+	<script id="temp" type="text/x-handlebars-template">
+			<tr class="title">
+				<td><input type="checkbox" id="checkAll"></td>
+				<td>강좌번호</td>
+				<td>강좌이름</td>
+				<td>담당교수</td>
+				<td>평균점수</td>
+			</tr>
+
+		{{#each list}}
+			<tr class="row1">
+				<td><input type="checkbox" class="check"></td>
+				<td class="lcode">{{lcode}}</td>
+				<td class="lname">{{lname}}</td>
+				<td class="pname">{{pname}</td>
+				<td class="avg">{{avg}</td>
+			</tr>
+		{{/each}}
+	</script>
+</body>
+
+<script>
+	getList();
+
+	function getList(){
+		$.ajax({
+			type:"get",
+			url:"json.jsp",
+			dataType:"json",
+			success:function(data){
+				alert("11");
+				var temp=Handlebars.compile($("#temp").html());
+				$("#tab").html(temp(data));
+			}
+		});
+	}
+</script>
+</html>

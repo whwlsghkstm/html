@@ -1,0 +1,18 @@
+@charset "UTF-8";
+
+	*{font-family:'Times New Roman'}
+	body{background:gray;}
+	#page{background:black; color:white; width:1000px; margin:auto; padding:10px;
+		box-shadow:10px 10px 10px #ffffb0; border-radius:10px 10px 10px 10px;}
+	#content{width:900px; padding:10px; border:1px solid white;
+			margin:20px auto;}
+	#content h1{text-align:center;}
+	#menu{width:700px; margin:auto;}
+	a{color:white; font-size:20px;}
+	a:hover{background:white; color:black;}
+	.tab{width:700px; margin:auto;}
+	.tab th{border:2px solid red; text-align:center; }
+	.tab td{border:1px solid white; padding:5px;}
+	.tab .title{background:white; color:black;}
+	.tab .data:nth-child(2n+1){background:gray;}
+	.tab .data:hover{background:white; color:black;}

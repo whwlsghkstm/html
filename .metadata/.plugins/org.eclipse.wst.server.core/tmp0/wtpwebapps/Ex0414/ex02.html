@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>자바 스크립트 함수</title>
+	<script>
+		function sum(){
+			var tot=0;
+			for(i=0; i<=100; i++){
+				tot+=i;
+			}
+			alert("1~100 합 = " + tot);
+		}
+
+		function fcolor(color){
+			var h=document.getElementById("header");
+			h.style.color=color;
+		}
+		function fback(back){
+			var h=document.getElementById("header");
+			h.style.background=back;
+		}
+		
+		function ffback(back){
+			var name=document.getElementsByClassName("name");
+			for(i=0; i<name.length; i++){
+				var n=name[i];
+				n.style.background=back;
+			}
+		}
+	</script>
+</head>
+<body>
+	<button onClick="sum()">1~100 합</button>
+	<input type="button" value="1~100 합" onClick="sum()">
+	<hr>
+	<h1 id="header">안녕하세용용용</h1>
+	<button onClick="fcolor('red')">글씨색 : 빨강</button>
+	<button onClick="fcolor('blue')">글씨색 : 파랑</button>
+	<button onClick="fcolor('yellow')">글씨색 : 노랑</button>
+	<br>
+	<button onClick="fback('pink')">배경색 : 분홍</button>
+	<button onClick="fback('green')">배경색 : 초록</button>
+	<button onClick="fback('skyblue')">배경색 : 하늘</button>
+	<br><br><br>
+	<h1 class="name">홍길동</h1>
+	<h1 class="name">심청이</h1>
+	<h1 class="name">이순신</h1>
+	<button onClick="ffback('red')">배경색 : 빨강</button>
+	<button onClick="ffback('yellow')">배경색 : 노랑</button>
+	<button onClick="ffback('blue')">배경색 : 파랑</button>
+</body>
+</html>

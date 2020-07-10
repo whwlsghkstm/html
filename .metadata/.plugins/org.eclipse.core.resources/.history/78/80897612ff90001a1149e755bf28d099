@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>밤새 모니터에 튀긴 침이 마르기도 전에</title>
+	<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.1/handlebars.js"></script>
+</head>
+<body>
+	<h1>[강좌입력]</h1>
+	<div>
+		강좌번호 : <input type="text" id="textlcode" maxlength=4>
+		강좌이름 : <input type="text" id="textlname">
+		<button id="btnSave">저장</button>
+	</div>
+
+	<h1>[강좌목록]</h1>
+	<input type="button" id="btnDelete" value="선택삭제">
+	<table id="tab" border=1></table>
+	<script id="temp" type="text/x-handlebars-template">
+			<tr class="title">
+				<td><input type="checkbox" id="checkAll"></td>
+				<td>강좌번호</td>
+				<td>강좌이름</td>
+				<td>삭제</td>
+			</tr>
+
+		{{#each cArray}}
+			<tr class="row">
+				<td><input type="checkbox" class="check"></td>
+				<td class="lcode">{{lcode}}</td>
+				<td class="lname">{{lname}}</td>
+				<td><button class="btnDelete">삭제</button></td>
+			</tr>
+		{{/each}}
+	</script>
+	
+	<h1>[특정강좌의 학생목록]</h1>
+	<span id="total"></span>
+	<span id="average"></span><br><br>
+	<input type="button" id="btnUpdate" value="선택수정">
+	<table id="tab1" border=1></table>
+	<script id="temp1" type="text/x-handlebars-template">
+			<tr class="title1">
+				<td><input type="checkbox" id="checkAll1"></td>
+				<td>학생번호</td>
+				<td>학생이름</td>
+				<td>점수</td>
+				<td>수정</td>
+			</tr>
+
+		{{#each jArray}}
+			<tr class="row1">
+				<td><input type="checkbox" class="check1"></td>
+				<td class="scode">{{scode}}</td>
+				<td class="sname">{{sname}}</td>
+				<td><input type="text" class="grade" value="{{grade}}"></td>
+				<td><button class="btnUpdate">수정</button></td>
+			</tr>
+		{{/each}}
+	</script>
+</body>
+
+<script>
+	var grade;
+	var lcode;
+	var scode;
+	getList();
+	
+	//목록출력
+	function getList(){
+		$.ajax({
+		    type:"get",
+		    url:"clist.jsp",
+		    dataType:"json",
+		    success:function(data){
+		       var temp=Handlebars.compile($("#temp").html());
+		       $("#tab").html(temp(data));
+		    }
+		});
+	}
+	
+	//성적수정후 저장
+	$("#tab1").on("click", ".row1 button", function(){
+		if(!confirm("수정하시겠습니까?")) return;
+		var row1=$(this).parent().parent();
+		grade=row1.find(".grade").val();
+		scode=row1.find(".scode").html();
+		alert(grade+" "+scode+" "+lcode);
+		$.ajax({
+			type:"get",
+			url:"cupdate.jsp",
+			data:{"grade":grade, "scode":scode, "lcode":lcode},
+			success:function(data){
+				var temp=Handlebars.compile($("#temp1").html());
+				$("#tab1").html(temp(data));
+				alert("수정이 완료되었습니다.");
+				getList();
+			}
+		});
+	});
+
+	
+	//강좌데이터 입력
+	function insert(){
+		lcode=$("#textlcode").val();
+		var lname=$("#textlname").val();
+		alert(lcode+lname);
+		$.ajax({
+			type:"get",
+			url:"cinsert.jsp",
+			data:{"lcode":lcode, "lname":lname},
+			dataType:"json",
+			success:function(data){
+				if(data.cnt==0){
+					alert("저장됐지롱");
+					getList();
+				}
+				else{
+					alert("저장안됐지롱");
+				}
+			}
+		});
+	}
+	
+	//강좌데이터 삭제
+	$("#tab").on("click", ".row button", function(){
+		if(!confirm("삭제 ㄱ?")) return;
+		var row=$(this).parent().parent();
+		lcode=row.find(".lcode").html();
+		$.ajax({
+			type:"get",
+			url:"cdelete.jsp",
+			data:{"lcode":lcode},
+			dateType:"json",
+			success:function(data){
+				if(data.cnt==null){
+					alert("삭제됐지롱");
+					getList();
+				}
+				else{
+					alert("삭제안됐지롱~~~!!");
+				}
+			}
+		});
+	});
+	
+	//선택한 학생데이터 삭제
+	$("#btnDelete").on("click", function(){
+		if(!confirm("선택한거 삭제 ㄱ?")) return;
+		$("#tab .row .check:checked").each(function(){
+			var row=$(this).parent().parent();
+			lcode=row.find(".lcode").html();
+			$(this).prop("checked", false);
+			$("#tab #checkAll").prop("checked", false);
+			
+			$.ajax({
+				type:"get",
+				url:"cdelete.jsp",
+				data:{"lcode":lcode},
+				success:function(data){}
+			});
+		})
+		alert("삭제됐지롱");
+		getList();
+	});
+	
+	//저장버튼클릭시 insert
+	$("#btnSave").on("click", function(){
+		insert();
+	});
+	
+	//강좌이름 text에서 엔터키입력시 insert
+	$("#textlname").keydown(function(key){
+		if(key.keyCode==13){
+			insert();
+		}
+	});
+	
+	//특정강좌를 수강신청한 학생목록
+	$("#tab").on("click", ".row", function(){
+		lcode=$(this).find(".lcode").html();
+		$.ajax({
+			type:"get",
+			url:"cslist.jsp",
+			data:{"lcode":lcode},
+			dataType:"json",
+			success:function(data){
+				$("#total").html("학생수 : "+data.cnt);
+				$("#average").html("평균점수 : "+data.average);
+				var temp=Handlebars.compile($("#temp1").html());
+				$("#tab1").html(temp(data));
+			}
+		});
+	});
+	
+	//체크박스모두표시
+	$("#tab").on("click", "#checkAll", function(){
+		if($(this).is(":checked")){
+			$("#tab .row .check").each(function(){
+				$(this).prop("checked", true);
+			});
+		}
+		else{
+			$("#tab .row .check").each(function(){
+				$(this).prop("checked", false);
+			});
+		}
+	});
+	
+	//체크박스모두표시
+	$("#tab1").on("click", "#checkAll1", function(){
+		if($(this).is(":checked")){
+			$("#tab1 .row1 .check1").each(function(){
+				$(this).prop("checked", true);
+			});
+		}
+		else{
+			$("#tab1 .row1 .check1").each(function(){
+				$(this).prop("checked", false);
+			});
+		}
+	});
+</script>
+
+</html>

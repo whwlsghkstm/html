@@ -1,0 +1,15 @@
+@charset "UTF-8";
+
+body{background:gray;}
+#page{background:white; width:1000px; margin:50px auto; padding:20px;
+	box-shadow:10px 10px 10px black;}
+h1{text-align:center; font-style:italic;}
+h3{text-align:right;}
+#nav span{background:black; color:white; margin:10px; padding:5px; font-size:15px;}
+#nav span:hover{background:white; color:black;}
+#nav{background:black; padding:5px;}
+.group{background:black; width:970px; padding:5px; margin:10px auto; overflow:hidden;
+	border:5px solid gray;}
+.box{color:white; text-align:center; width:200px; height:200px; float:left; margin:20px;
+	background:#747474;}
+.box:hover{box-shadow:10px 10px 10px #fff29e;}

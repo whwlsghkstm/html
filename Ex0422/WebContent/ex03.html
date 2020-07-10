@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>영화검색</title>
+	<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.1/handlebars.js"></script>
+	<style>
+		#tab{width:700px; border-collapse:collapse;}
+		td{border:1px solid black; padding:3px;}
+		.title{width:300px; text-overflow:ellipsis; white-space:nowrap; overflow:hidden;}
+		.actor{width:200px; text-overflow:ellipsis; white-space:nowrap; overflow:hidden;}
+		.title:hover{background:blue;}
+		.actor:hover{background:pink;}
+		#search{width:700px; padding:10px; background:gray; color:white; margin-bottom:10px;}
+		.header{text-align:center; background:pink; color:yellow;}
+		.save .delete{text-align:center; width:50px}
+	</style>
+</head>
+<body>
+	<h1>[영화검색]</h1>
+	<div id="search">
+		검색수 : <span id="total"></span><br>
+		<input type="text" id="textSearch" value="어벤져스">
+		<input type="button" id="btnSearch" value="검색">
+	</div>
+		<button id="btnPre">이전</button>
+		<span id="page"></span>
+		<button id="btnNext">다음</button>
+		<br><hr>
+	
+	<input type="button" id="btnSave" value="선택저장">
+	<table id="tab"></table>
+	<script id="temp" type="text/x-handlevars-tamplate">
+			<tr class="header">
+				<td><input type="checkbox" id="checkAll"></td>
+				<td>영화포스터</td>
+				<td>제목</td>
+				<td>주연배우</td>
+				<td>저장</td>
+			</tr>
+
+		{{#each items}}
+			<tr class="row">
+				<td><input type="checkbox" class="check"></td>
+				<td><img src={{{image}}} url={{{image}}}></td>
+				<td><div class="title">{{{title}}}</div></td>
+				<td><div class="actor">{{{actor}}}</div></td>
+				<td><button class="save">저장</button></td>
+			</tr>
+		{{/each}}
+	</script><hr>
+	
+	<h1>[저장결과]</h1>
+	<button id="btnDelete">선택삭제</button>
+	<table id="tab1"></table>
+	<script id="temp1" type="text/x-handlevars-tamplate">
+			<tr class="header">
+				<td><input type="checkbox" id="checkAll1"></td>
+				<td>영화포스터</td>
+				<td>제목</td>
+				<td>주연배우</td>
+				<td>저장</td>
+			</tr>
+
+		{{#each .}}
+			<tr class="row" mnum={{mnum}}>
+				<td><input type="checkbox" class="check"></td>
+				<td><img src={{{image}}} url={{{image}}}></td>
+				<td><div class="title">{{{title}}}</div></td>
+				<td><div class="actor">{{{actor}}}</div></td>
+				<td><button class="delete">삭제</button></td>
+			</tr>
+		{{/each}}
+	</script>
+	
+</body>
+
+<script>
+	var display=3;
+	var start=1;
+	var page=1;
+	var total;
+
+	getList();
+	getMovie();
+	$("#btnSearch").on("click", function(){
+		getList();
+		start=1;
+		page=1;
+	});
+	
+	$("#textSearch").keydown(function(key){
+		if(key.keyCode==13){
+			getList();
+			start=1;
+			page=1;
+		}
+	});
+	
+	$("#btnNext").on("click", function(){
+		if(start+display < total){
+			start+=display;
+			page++;
+			getList();
+		}
+		else{
+			alert("끝이지롱");
+		}
+	});
+	
+	$("#btnPre").on("click", function(){
+		if(start>1){
+			start-=display;
+			page--;
+			getList();
+		}
+		else{
+			alert("처음이지롱");
+		}
+	});
+	
+	$("#tab").on("click", ".row button", function(){
+		if(!confirm("저장하시겠습니까?")) return;
+		var row=$(this).parent().parent();
+		var title=row.find(".title").text();
+		var actor=row.find(".actor").text();
+		var img=row.find("img").attr("src");
+		$.ajax({
+			type:"post",
+			url:"insert.jsp",
+			data:{"title":title, "actor":actor, "image":img},
+			success:function(){
+				alert("저장됐지롱");
+				getMovie();
+			},
+			error:function(){
+				alert("저장안됐지롱");
+			}
+		});
+	});
+	
+	$("#tab1").on("click", ".row .delete", function(){
+		if(!confirm("삭제하시겠습니까?")) return;
+		var row=$(this).parent().parent();
+		var mnum=row.attr("mnum");
+		$.ajax({
+			type:"post",
+			url:"delete.jsp",
+			data:{"mnum":mnum},
+			success:function(){}
+		});
+		alert("삭제됐지롱");
+		getMovie();
+	});
+	
+	$("#tab").on("click", "#checkAll", function(){
+		if($(this).is(":checked")){
+			$("#tab .row .check").each(function(){
+				$(this).prop("checked", true);
+			});
+		}
+		else{
+			$("#tab .row .check").each(function(){
+				$(this).prop("checked", false);
+			});
+		}
+	});
+
+	$("#tab1").on("click", "#checkAll1", function(){
+		if($(this).is(":checked")){
+			$("#tab1 .row .check").each(function(){
+				$(this).prop("checked", true);
+			});
+		}
+		else{
+			$("#tab1 .row .check").each(function(){
+				$(this).prop("checked", false);
+			});
+		}
+	});
+	
+	function getMovie(){
+		$.ajax({
+			type:"get",
+			url:"list.jsp",
+			dataType:"json",
+			success:function(data){
+				var temp=Handlebars.compile($("#temp1").html());
+				$("#tab1").ht
+				ml(temp(data));
+			}
+		});
+	}
+
+	$("#btnSave").on("click", function(){
+		if(!confirm("선택한 상품을 저장하시겠습니까?")) return;
+		$("#tab .row .check:checked").each(function(){
+			var row=$(this).parent().parent();
+			var title=row.find(".title").text();
+			var actor=row.find(".actor").text();
+			var img=row.find("img").attr("src");
+			$(this).prop("checked", false);
+			
+			$.ajax({
+				type:"post",
+				url:"insert.jsp",
+				data:{"title":title, "actor":actor},
+				success:function(){}
+			});
+		});
+		alert("저장이 완료 되었습니다.");
+		getMovie();
+		
+		$("#tab #checkAll").prop("checked", false);
+	});
+	
+	$("#btnDelete").on("click", function(){
+		if(!confirm("선택한 상품을 삭제하시겠습니까?")) return;
+		$("#tab1 .row .check:checked").each(function(){
+			var row=$(this).parent().parent();
+			var mnum=row.attr("mnum");
+			$(this).prop("checked", false);
+			
+			$.ajax({
+				type:"post",
+				url:"delete.jsp",
+				data:{"mnum":mnum},
+				success:function(){}
+			});
+		});
+		alert("삭제가 완료 되었습니다.");
+		getMovie();
+		
+		$("#tab1 #checkAll1").prop("checked", false);
+	});
+
+	function getList(){
+		var query=$("#textSearch").val();
+		$("#textSearch").focus();
+		
+		$.ajax({
+			type:"get",
+			url:"movie.jsp",
+			dataType:"json",
+			data:{"query":query, "display":display, "start":start},
+			success:function(data){
+				total=data.total;
+				$("#total").html(total);
+				$("#page").html(page + " : page")
+				var temp=Handlebars.compile($("#temp").html());
+				$("#tab").html(temp(data));
+			}
+		});
+	}
+</script>
+</html>

@@ -1,0 +1,35 @@
+package ex01;
+
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.DriverManager;
+
+public class DAO {
+	//데이터베이스 연결 method
+	public Connection con() throws Exception{
+		String driver = "oracle.jdbc.driver.OracleDriver";
+		String url = "jdbc:oracle:thin:@localhost:1521:xe";
+		String user = "haksa";
+		String password = "pass";
+		  
+		Class.forName(driver);
+		Connection con=DriverManager.getConnection(url, user, password);
+		  
+		return con;
+	}
+	
+	//교수입력 method
+	public void pinsert(String pcode, String pname, String dept, String hiredate, String title, int salary) throws Exception{
+		String sql="{call add_professor(?,?,?,?,?,?,?)}";
+		CallableStatement cs=con().prepareCall(sql);
+		cs.setString(1, pcode);
+		cs.setString(2, pname);
+		cs.setString(3, dept);
+		cs.setString(4, hiredate);
+		cs.setString(5, title);
+		cs.setInt(6, salary);
+		cs.registerOutParameter(7, oracle.jdbc.OracleTypes.CURSOR);
+		cs.execute();
+		con().close();
+	}
+}

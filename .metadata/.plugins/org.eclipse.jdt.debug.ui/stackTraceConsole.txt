@@ -1,0 +1,9 @@
+			EVO vo=new EVO();
+			vo.setLcode(rs.getString("lcode"));
+			vo.setLname(rs.getString("lname"));
+			vo.setScode(rs.getString("scode"));
+			vo.setSname(rs.getString("sname"));
+			vo.setGrade(rs.getInt("grade"));
+			vo.setEdate(rs.getDate("edate"));
+			array.add(vo);
+		}

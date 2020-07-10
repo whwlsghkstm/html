@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>[댓글 관리]</title>
+	<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+   <style>
+      #page{padding:20px;width:800px;background:gray; color:yellow; margin:auto;}
+      h1{margin:auto; text-align:center;}
+      .box{width:700px; border:1px dotted black; padding:10px; margin:10px auto;}
+      .title{overflow:hidden;}
+      .date{ font-size:20px; color:orange; width:200px;float:left;}
+      .like{float:right;}
+      .cnt{font-size:12px; color:pink;}
+      .content{background:red; padding:20px; font-size:15px;}
+   </style>
+</head>
+<body>
+	<div id="page">
+	<h1>[댓글 관리]</h1>
+	   <input type="text" id="content" size=100>
+	   <input type="button" value="저장" id="btnInsert">
+	   <hr>
+			   <div class="box">
+			      <div class="title">
+			         <div class="date">2020/04/17 13:00:00</div>
+			         <div class="like">
+			            <button>♣</button>
+			            <span class="cnt">120</span>
+			         </div>   
+			      </div>
+			      <div class="content">
+					유럽의 경우와 비교하면, 사망자는 최소한 30만명 이상을 예상한다.<br>
+			      	<button>삭제</button>
+			      </div>
+			   </div>
+	</div>
+</body>
+
+</html>

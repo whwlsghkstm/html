@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>다섯살때부터 나는 피아노를 쳤어</title>
+</head>
+<body>
+	<h1>[영재였지]</h1>
+	<select id="dept">
+		<option>전산</option>
+		<option>전자</option>
+		<option>건축</option>
+		<option>실용음악</option>
+	</select>
+</body>
+</html>
